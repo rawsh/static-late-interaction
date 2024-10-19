@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "static-late-interaction"
+version = "0.1.0"
+description = ""
+authors = ["Robert Washbourne <rawashbourne@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+model2vec = {extras = ["distill"], version = "^0.2.4"}
+ragatouille = "^0.0.8.post4"
+rerankers = "^0.5.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
