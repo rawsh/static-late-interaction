@@ -19,7 +19,7 @@ def format_corpus(row):
     return f"{row['title']} {row['text']}"
 corpus = corpus.map(lambda row: {'formatted': format_corpus(row)})
 corpus_texts = corpus['formatted']
-print(f"Numbner of corpus documents: {len(corpus_texts)}")
+print(f"Number of corpus documents: {len(corpus_texts)}")
 
 # encode corpus
 corpus_emb = model.encode_as_sequence(corpus_texts)
@@ -27,6 +27,7 @@ print(f"Embedding dimension: {corpus_emb[0].shape[1]}")
 
 # big tensor
 corpus_tensor = pad_and_stack_vectors(corpus_emb)
+print(f"Corpus tensor shape: {corpus_tensor.shape}")
 
 # scoring dict
 query_id_to_corpus_map = {}
@@ -53,16 +54,18 @@ print("Number of test cases:", len(test_cases))
 # encode queries
 query_emb = model.encode_as_sequence(list(query_id_to_question.values()))
 assert len(query_emb) == len(query_ids)
+print(f"Number of queries: {len(query_ids)}")
 
 # accuracy: number of hits in top k
 accuracy_scores = []
 for query_id, query_emb in zip(query_ids, query_emb):
     # get the relevant corpus ids ground truth
     relevant_corpus_ids = query_id_to_corpus_map[query_id]
-
+    print(relevant_corpus_ids)
     # compute relevance scores
     query = torch.tensor(query_emb)
     scores = compute_relevance_scores(query, corpus_tensor, k=len(corpus_tensor))
+    print(scores)
     # get the top k indices
     _, top_k_indices = torch.topk(scores, k=10)
     # convert to list
@@ -78,4 +81,3 @@ for query_id, query_emb in zip(query_ids, query_emb):
     print(f"Relevant corpus ids: {relevant_corpus_ids}")
     print(f"Accuracy: {accuracy}")
     print("--------------------------------------------------")
-    
