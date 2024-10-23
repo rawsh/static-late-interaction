@@ -361,9 +361,7 @@ def distill_colbert(
 
 
 if __name__ == "__main__":
-    # Example usage
-    # model_name = "answerdotai/answerai-colbert-small-v1"
-    # m2v_model = distill_colbert(model_name=model_name, embedding_size=96)
-    model_name = "colbert-ir/colbertv2.0"
-    m2v_model = distill_colbert(model_name=model_name, embedding_size=128)
+    model_name = "answerdotai/answerai-colbert-small-v1"
+    device = 'cuda' if torch.cuda.is_available() else ('mps' if torch.mps.is_available() else 'cpu')
+    m2v_model = distill_colbert(model_name=model_name, embedding_size=96, device=device)
     m2v_model.save_pretrained("m2v_model")
