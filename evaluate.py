@@ -79,7 +79,7 @@ def evaluate_model(
 ):
     """Evaluate model on the scifact dataset."""
     if device is None:
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        device = 'cuda' if torch.cuda.is_available() else ('mps' if torch.mps.is_available() else 'cpu')
     
     print(f"Using device: {device}")
     
@@ -186,5 +186,5 @@ if __name__ == "__main__":
     metrics, avg_metrics = evaluate_model(
         model_path=model_path,
         batch_size=32,
-        device='cuda' if torch.cuda.is_available() else 'cpu'
+        device='cuda' if torch.cuda.is_available() else ('mps' if torch.mps.is_available() else 'cpu')
     )

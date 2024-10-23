@@ -250,9 +250,12 @@ if __name__ == "__main__":
     ]
     
     query = "What is dangerous?"
+
+    # Setup device
+    device = 'cuda' if torch.cuda.is_available() else ('mps' if torch.mps.is_available() else 'cpu')
     
     # Simple search
-    results = search(model, query, documents, top_k=2)
+    results = search(model, query, documents, top_k=2, device=device)
     
     print("\nSearch Results:")
     for idx, score in results:
@@ -262,13 +265,15 @@ if __name__ == "__main__":
     query_emb = model.encode_as_sequence(query)
     doc_embs, doc_mask = pad_and_stack_vectors(
         [model.encode_as_sequence(d) for d in documents],
-        normalize=True
+        normalize=True,
+        device=device
     )
     
     sorted_idx, scores = compute_relevance_scores(
         query_emb, 
         doc_embs, 
-        doc_mask
+        doc_mask,
+        device=device
     )
     
     print("\nDirect Scoring Results:")
